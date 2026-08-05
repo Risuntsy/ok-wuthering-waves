@@ -1,3 +1,4 @@
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -11,8 +12,9 @@ class TestCalculatePcExePath(unittest.TestCase):
     def test_none_path_uses_most_recently_run_executable(self):
         expected = r"C:\Games\Wuthering Waves.exe"
 
-        with patch.object(config, "_find_most_recently_run_pc_exe", return_value=expected) as find:
-            with patch.object(config, "_find_pc_exe_from_registry") as find_registry:
+        with patch.object(sys, 'platform', 'win32'):
+            with patch.object(config, "_find_most_recently_run_pc_exe", return_value=expected) as find, \
+                    patch.object(config, "_find_pc_exe_from_registry") as find_registry:
                 result = config.calculate_pc_exe_path(None)
 
         find.assert_called_once_with()
@@ -22,16 +24,18 @@ class TestCalculatePcExePath(unittest.TestCase):
     def test_none_path_falls_back_to_registry_lookup(self):
         expected = r"C:\Games\Wuthering Waves.exe"
 
-        with patch.object(config, "_find_most_recently_run_pc_exe", return_value=None):
-            with patch.object(config, "_find_pc_exe_from_registry", return_value=expected) as find:
+        with patch.object(sys, 'platform', 'win32'):
+            with patch.object(config, "_find_most_recently_run_pc_exe", return_value=None), \
+                    patch.object(config, "_find_pc_exe_from_registry", return_value=expected) as find:
                 result = config.calculate_pc_exe_path(None)
 
         find.assert_called_once_with()
         self.assertEqual(expected, result)
 
     def test_none_path_returns_none_when_no_installation_is_found(self):
-        with patch.object(config, "_find_most_recently_run_pc_exe", return_value=None):
-            with patch.object(config, "_find_pc_exe_from_registry", return_value=None):
+        with patch.object(sys, 'platform', 'win32'):
+            with patch.object(config, "_find_most_recently_run_pc_exe", return_value=None), \
+                    patch.object(config, "_find_pc_exe_from_registry", return_value=None):
                 result = config.calculate_pc_exe_path(None)
 
         self.assertIsNone(result)
@@ -42,9 +46,18 @@ class TestCalculatePcExePath(unittest.TestCase):
             r"\Win64\Client-Win64-Shipping.exe"
         )
 
-        result = config.calculate_pc_exe_path(running_path)
+        with patch.object(sys, 'platform', 'win32'):
+            result = config.calculate_pc_exe_path(running_path)
 
         self.assertEqual(r"C:\Games\Wuthering Waves Game\Wuthering Waves.exe", result)
+
+    def test_linux_running_path_is_returned_unchanged(self):
+        running_path = "/games/WutheringWaves/Client-Win64-Shipping.exe"
+
+        with patch.object(sys, 'platform', 'linux'):
+            result = config.calculate_pc_exe_path(running_path)
+
+        self.assertEqual(running_path, result)
 
     def test_registered_launcher_path_finds_sibling_game_folder(self):
         with tempfile.TemporaryDirectory() as temp:

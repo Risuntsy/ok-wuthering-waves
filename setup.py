@@ -47,6 +47,19 @@ setuptools.setup(
         "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",
         "Operating System :: Microsoft :: Windows",
+        "Operating System :: POSIX :: Linux",
     ],
+    install_requires=[
+        'pywin32>=306; sys_platform == "win32"',
+        'darkdetect>=0.8.0',
+        'PySideSix-Frameless-Window>=0.4.3; sys_platform == "win32"',
+        'typing-extensions>=4.11.0',
+        'PySide6-Essentials>=6.7.0',
+        'GitPython>=3.1.43',
+        'requests>=2.32.3',
+        'psutil>=6.0.0',
+        'pywayland>=0.4.18; sys_platform == "linux"',
+    ],
+    python_requires='>=3.9',
     ext_modules=cythonize(extensions, compiler_directives={'language_level': "3"})
 )

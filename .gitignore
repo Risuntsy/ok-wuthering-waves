@@ -40,6 +40,7 @@ tests/configs/
 tests/logs/
 i18n/en_US/
 logs/
+operation_logs/
 build/
 site/
 develop-eggs/
@@ -75,3 +76,4 @@ repo/
 
 assets/result.json
 src/gui/CharacterCodeTab.py
+CURRENT_STATE.md

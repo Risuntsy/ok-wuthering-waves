@@ -1,5 +1,6 @@
 import os
 import re
+import sys
 from pathlib import Path
 
 from ok import Box, ConfigOption, Icon
@@ -110,10 +111,16 @@ def _find_pc_exe_near_registered_path(registered_path):
 
 
 def calculate_pc_exe_path(running_path):
+    from pathlib import PureWindowsPath
+
+    if sys.platform == 'linux':
+        return running_path
     if running_path is None:
         return _find_most_recently_run_pc_exe() or _find_pc_exe_from_registry()
-    game_exe_folder = Path(running_path).parents[3]
-    return str(game_exe_folder / "Wuthering Waves.exe")
+    path = PureWindowsPath(running_path)
+    if not running_path or len(path.parents) <= 3:
+        return running_path
+    return str(path.parents[3] / "Wuthering Waves.exe")
 
 
 def blur_area(width, height):
@@ -195,7 +202,8 @@ config = {
         'exe': 'Client-Win64-Shipping.exe',
         'hwnd_class': 'UnrealWindow',
         'interaction': 'PostMessage',
-        'capture_method': ['WGC', 'BitBlt_RenderFull'],  # Windows版本支持的话, 优先使用WGC, 否则使用BitBlt_Full
+        'capture_method': ['Wlroots'] if sys.platform == 'linux' else ['WGC', 'BitBlt_RenderFull'],  # Windows版本支持的话, 优先使用WGC, 否则使用BitBlt_Full
+        'start_exe': sys.platform != 'linux',
         'check_hdr': False,
         'force_no_hdr': False,
         'check_night_light': True,
@@ -269,12 +277,12 @@ config = {
         ["src.task.AutoLoginTask", "AutoLoginTask"],
         ["src.task.SkipDialogTask", "AutoDialogTask"],
         ["src.task.FastTravelTask", "FastTravelTask"],
-        ["src.task.MouseResetTask", "MouseResetTask"],
+        *([["src.task.MouseResetTask", "MouseResetTask"]] if sys.platform == 'win32' else []),
     ], 'scene': ["src.scene.WWScene", "WWScene"],
     'update_pyappify': {
         'to_version': '1.2.3',
         'zip_url': 'https://github.com/ok-oldking/ok-wuthering-waves/releases/download/v3.5.30/ok-ww-win32.zip',
         'sha256': '447207edbfb6944beb994347048e155df99775eb18c87dcae54dda125071c94a',
-    }
+    } if sys.platform == 'win32' else None
 
 }
