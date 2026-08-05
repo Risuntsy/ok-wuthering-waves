@@ -1,6 +1,10 @@
 import math
 
-import win32api
+import sys
+if sys.platform == 'win32':
+    import win32api
+else:
+    win32api = None
 
 from ok import TriggerTask, Logger
 
@@ -30,6 +34,8 @@ class MouseResetTask(TriggerTask):
             self.running_reset = False
 
     def mouse_reset(self):
+        if win32api is None:
+            return
         if self.is_browser():
             return
         try:
