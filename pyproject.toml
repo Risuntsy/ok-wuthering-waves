@@ -25,3 +25,10 @@ docs = [
 web-test = [
     "ok-script[web]==2.0.7b1",
 ]
+
+[tool.uv.sources]
+ok-script = { path = "../ok-script", editable = true }
+
+# setup.py -> get_pypi_latest_version needs these inside the isolated build env.
+[tool.uv.extra-build-dependencies]
+ok-script = ["requests", "packaging"]

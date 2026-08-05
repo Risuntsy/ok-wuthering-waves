@@ -1,6 +1,10 @@
 import math
 
-import win32api
+import sys
+if sys.platform == 'win32':
+    import win32api
+else:
+    win32api = None
 
 from ok import TriggerTask, Logger
 
@@ -32,7 +36,7 @@ class MouseResetTask(TriggerTask):
             self.handler.post(self.mouse_reset, delay, remove_existing=True)
 
     def mouse_reset(self):
-        if not self.enabled or self.is_browser():
+        if win32api is None or not self.enabled or self.is_browser():
             return
         try:
             current_position = win32api.GetCursorPos()
