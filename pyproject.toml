@@ -1,0 +1,20 @@
+[project]
+name = "ok-wuthering-waves"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "gitpython>=3.1.50",
+    "ok-script",
+    "onnxocr-ppocrv4==0.0.5",
+    "opencv-python>=4.13.0.92",
+    "openvino>=2026.2.0",
+]
+
+[tool.uv.sources]
+ok-script = { path = "../ok-script", editable = true }
+
+# setup.py imports get_pypi_latest_version -> requests during editable builds.
+[tool.uv.extra-build-dependencies]
+ok-script = ["requests"]
