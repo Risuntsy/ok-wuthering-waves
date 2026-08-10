@@ -247,7 +247,7 @@ wheels = [
 
 [[package]]
 name = "ok-script"
-version = "1.0.181"
+version = "1.0.185"
 source = { editable = "../ok-script" }
 dependencies = [
     { name = "mouse", marker = "sys_platform == 'win32'" },

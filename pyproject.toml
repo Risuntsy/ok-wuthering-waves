@@ -15,6 +15,6 @@ dependencies = [
 [tool.uv.sources]
 ok-script = { path = "../ok-script", editable = true }
 
-# setup.py imports get_pypi_latest_version -> requests during editable builds.
+# setup.py -> get_pypi_latest_version needs these inside the isolated build env.
 [tool.uv.extra-build-dependencies]
-ok-script = ["requests"]
+ok-script = ["requests", "packaging"]
