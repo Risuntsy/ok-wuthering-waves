@@ -742,6 +742,7 @@ version = "0.0.1"
 source = { editable = "." }
 dependencies = [
     { name = "ok-script", extra = ["ocr", "qt"] },
+    { name = "onnxocr-ppocrv5" },
     { name = "opencv-python" },
     { name = "openvino" },
     { name = "pyappify" },
@@ -764,6 +765,7 @@ requires-dist = [
     { name = "mkdocs-material", marker = "extra == 'docs'", specifier = ">=9.5,<10" },
     { name = "ok-script", extras = ["ocr", "qt"], editable = "../ok-script" },
     { name = "ok-script", extras = ["web"], marker = "extra == 'web-test'", editable = "../ok-script" },
+    { name = "onnxocr-ppocrv5", specifier = ">=0.0.20" },
     { name = "opencv-python" },
     { name = "openvino" },
     { name = "polib", marker = "extra == 'dev'" },
